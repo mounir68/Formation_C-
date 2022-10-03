@@ -44,7 +44,7 @@ namespace Serie_I
                 }
                 else
                 {
-                    for (int j = 0; j < n; j++)
+                    for (int j = 0; j <= n; j++)
                     {
                         if (j % 2 == 0)
                         {
