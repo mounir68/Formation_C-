@@ -45,6 +45,12 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serie1\Ex1_ElementaryOperations.cs" />
+    <Compile Include="Serie1\Ex2_SpeakingClock.cs" />
+    <Compile Include="Serie1\Ex3_Pyramid.cs" />
+    <Compile Include="Serie1\Ex4_Factorial.cs" />
+    <Compile Include="Serie1\Ex5_PrimeNumbers.cs" />
+    <Compile Include="Serie1\Ex6_Euclide.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
