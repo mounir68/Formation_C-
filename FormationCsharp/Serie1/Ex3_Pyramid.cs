@@ -14,12 +14,12 @@ namespace Serie_I
             {
                 if (n == 1)
                 {
-                    Console.WriteLine("*");
+                    Console.WriteLine("+");
 
                 }
                 else
                 {
-                    for (int j=0; j < n; j++)
+                    for (int j=0; j <= n; j++)
                     {
                         for (int i = 0; i < n - j + 1; i++)
                         {
