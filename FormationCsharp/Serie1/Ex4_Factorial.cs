@@ -22,8 +22,13 @@ namespace Serie_I
 
         public static int FactorialRecursive(int n)
         {
-            //TODO
-            return -1;
+            if (n == 0)
+                return 1;
+            else
+            {
+                return (FactorialRecursive(n-1) * n);
+            }
+            
         }
     }
 }

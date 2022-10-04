@@ -10,13 +10,32 @@ namespace Serie_I
     {
         static bool IsPrime(int valeur)
         {
-            //TODO
-            return false;
+            int i = 0;
+            for (int j=1; j<=valeur; j++)
+            {
+                if (valeur % j == 0)
+                {
+                    i++;
+                }
+                else
+                    continue;
+            }
+            if (i == 2)
+                return true;
+            else
+                return false;
         }
 
         public static void DisplayPrimes()
         {
-            //TODO
+            for (int i = 1; i <= 100; i++)
+            {
+                if (IsPrime(i))
+                    Console.WriteLine(i);
+                else
+                    continue;
+
+            }
         }
     }
 }
