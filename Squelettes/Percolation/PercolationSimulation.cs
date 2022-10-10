@@ -26,23 +26,32 @@ namespace Percolation
     {
         public PclData MeanPercolationValue(int size, int t)
         {
+            double Fraction = 0;
+            for(int i = 1; i <= t; i++)
+            {
+                Fraction += PercolationValue(size);
+                
+            }
+            double Mean = Fraction / t;
+            double StandardDeviation = 
             return new PclData();
         }
 
         public double PercolationValue(int size)
         {
-            bool[,] grille = new bool[size, size];
+        
             Percolation perc = new Percolation(size);
             Random rnd = new Random();
+            int i = 0;
             while (!perc.Percolate())
             {
                 int x = rnd.Next(0, maxValue: size);
                 int y = rnd.Next(0, maxValue: size);
                 perc.Open(x, y);
-            }
+                i++;
                 
-             
-            return 0;
+            }
+            return i / (size * size); 
         }
     }
 }
