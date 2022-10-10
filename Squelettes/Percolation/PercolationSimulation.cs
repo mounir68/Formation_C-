@@ -33,8 +33,9 @@ namespace Percolation
                 
             }
             double Mean = Fraction / t;
-            double StandardDeviation = 
-            return new PclData();
+            double StandardDeviation = 0;
+            // Dommage de ne pas renvoyer la moyenne 
+            return new PclData() { Mean = Mean};
         }
 
         public double PercolationValue(int size)
@@ -45,13 +46,21 @@ namespace Percolation
             int i = 0;
             while (!perc.Percolate())
             {
+                // Il faut que tu vérifies si la case n'a pas déjà été ouverte !
                 int x = rnd.Next(0, maxValue: size);
                 int y = rnd.Next(0, maxValue: size);
-                perc.Open(x, y);
-                i++;
+
+                // Ajout de ma part !
+                if (!perc.IsOpen(x, y))
+                {
+                    perc.Open(x, y);
+                    i++;
+                }
                 
             }
-            return i / (size * size); 
+            // Division entre des entiers tu obtiens 0.
+            return (double)i / (size * size);
+            //return i / (size * size); 
         }
     }
 }

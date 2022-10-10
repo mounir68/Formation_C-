@@ -141,9 +141,10 @@ namespace Percolation
         }
 
 
-            public void Recursion(int i, int j)
+        public void Recursion(int i, int j)
         {
-            for (int k = 0; k < CloseNeighbors(i, j).Count-1; k++)
+            // Pb : < strictement ne fonctionne pas car tu ne traites pas le dernier voisin
+            for (int k = 0; k <= CloseNeighbors(i, j).Count - 1; k++)
             {
                 int x = CloseNeighbors(i, j)[k].Key;
                 int y = CloseNeighbors(i, j)[k].Value;
@@ -152,24 +153,28 @@ namespace Percolation
                     _full[x, y] = true;
                     if (x == _size - 1)
                     {
+                        // Bien par contre, tu oublies de le faire s'il s'agit de (i, j)
                         _percolate = true;
                     }
                     Recursion(x, y);
                 }
-               
+
             }
         }
-            public void Open(int i, int j)
+        public void Open(int i, int j)
         {
             _open[i, j] = true;
-            
-            for (int k =0; k < CloseNeighbors(i , j).Count - 1; k++)
+
+            // Tu t'embêtes à appeler CloseNeighbors plusieurs fois au lieu de stocker le résultat. 
+            // Pb : < strictement ne fonctionne pas car tu ne traites pas le dernier voisin
+            for (int k = 0; k <= CloseNeighbors(i, j).Count - 1; k++)
             {
                 int x = CloseNeighbors(i, j)[k].Key;
                 int y = CloseNeighbors(i, j)[k].Value;
                 if (IsFull(x, y) || i == 0)
                 {
                     _full[i, j] = true;
+
                     Recursion(i, j);
                     break;
                 }
