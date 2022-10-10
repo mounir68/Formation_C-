@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DB0970E9-929C-499E-AD5A-218D65F6F734}</ProjectGuid>
+    <ProjectGuid>{8A365A19-46A9-41CB-9251-B10D7EBA7453}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>FormationCsharp</RootNamespace>
-    <AssemblyName>FormationCsharp</AssemblyName>
+    <RootNamespace>Percolation</RootNamespace>
+    <AssemblyName>Percolation</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,20 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Percolation.cs" />
+    <Compile Include="PercolationSimulation.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serie1\Ex1_ElementaryOperations.cs" />
-    <Compile Include="Serie1\Ex2_SpeakingClock.cs" />
-    <Compile Include="Serie1\Ex3_Pyramid.cs" />
-    <Compile Include="Serie1\Ex4_Factorial.cs" />
-    <Compile Include="Serie1\Ex5_PrimeNumbers.cs" />
-    <Compile Include="Serie1\Ex6_Euclide.cs" />
-    <Compile Include="Serie2\Ex1_Search.cs" />
-    <Compile Include="Serie2\Ex2_Matrix.cs" />
-    <Compile Include="Serie2\Ex3_Eratosthene.cs" />
-    <Compile Include="Serie2\Ex4_Quiz.cs" />
-    <Compile Include="Serie3\Ex1_ClassCouncil.cs" />
-    <Compile Include="Serie3\Ex2_SortingPerformance.cs" />
-    <Compile Include="Serie3\Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
