@@ -106,7 +106,8 @@ namespace Projet_Partie1
                     foreach (var trans in transactions)
                     {
                         bool etat = gestion.Transaction(trans.numtrans, trans.montant, trans.numcpt1, trans.numcpt2);
-                        writer.WriteLine($"{trans.numtrans};{etat}");
+                        string res = etat ? "OK" : "KO";
+                        writer.WriteLine($"{trans.numtrans};{res}");
                     }
                 }
             }

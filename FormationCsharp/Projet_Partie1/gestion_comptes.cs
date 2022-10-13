@@ -21,7 +21,7 @@ namespace Projet_Partie1
         }
         private bool soldeok(double solde)
         {
-            return solde > 0;
+            return solde >= 0;
         }
         
         public bool AjouterCompte(int numcpt, double solde = 0)
