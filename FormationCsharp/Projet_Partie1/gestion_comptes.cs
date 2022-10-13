@@ -53,10 +53,10 @@ namespace Projet_Partie1
 
         }
 
-        private bool plafondok(int numcpt)
+        private bool plafondok(int numcpt, double sommetrans)
         {
             List<double> dernretraits =  _retraits[numcpt].Skip(_retraits[numcpt].Count - 10).ToList();
-            double somme = dernretraits.Sum();
+            double somme = dernretraits.Sum() + sommetrans;
             return somme <= 1000;
         }
 
@@ -69,7 +69,7 @@ namespace Projet_Partie1
             }
             else if ( tnumcptok(numcpt1) && numcpt2 == 0 )
             {
-                if (plafondok(numcpt1) && sommeok(somme, numcpt1))
+                if (plafondok(numcpt1, somme) && sommeok(somme, numcpt1))
                 {
                     _comptes[numcpt1] -= somme;
                     _retraits[numcpt1].Add(somme);
@@ -79,7 +79,7 @@ namespace Projet_Partie1
             }
             else if (tnumcptok(numcpt1) && tnumcptok(numcpt2))
             {
-                if (plafondok(numcpt1) &&  sommeok(somme, numcpt1))
+                if (plafondok(numcpt1 , somme) &&  sommeok(somme, numcpt1))
                 {
                     _comptes[numcpt1] -= somme;
                     _comptes[numcpt2] += somme;
