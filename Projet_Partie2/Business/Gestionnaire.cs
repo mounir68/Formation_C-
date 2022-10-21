@@ -6,15 +6,16 @@ namespace Projet_Partie2
 {
     public class Gestionnaire
     {
-        protected int num_gest;
-        protected string type;
-        protected int nb_transac;
-        private const int _environnement = 0;
+        public int num_gest;
+        public string type;
+        public int nb_transac;
+       
         
 
-        private readonly Dictionary<int, double> _comptes;
-        public  List<Compte_bancaire> Comptes;
-        public Dictionary<int,List<double>> _retraits;
+        public  Dictionary<int, Compte_bancaire> _comptes = new Dictionary<int, Compte_bancaire>();
+        public  List<Compte_bancaire> Comptes = new List<Compte_bancaire>();
+        public static Dictionary<int, int> comptes_gests = new Dictionary<int, int>();
+        //public Dictionary<int,List<double>> _retraits;
 
         public Gestionnaire(int num_gest, string type, int nb_transac)
         {
@@ -51,11 +52,11 @@ namespace Projet_Partie2
         {
             if (Numcptok_nv(numcpt) && Soldeok(solde))
             {
-                Compte_bancaire compte = new Compte_bancaire(numcpt, solde);
-                _comptes.Add(numcpt, solde);
-                _retraits.Add(numcpt,new List<double>(){});
+                Compte_bancaire compte = new Compte_bancaire(numcpt, solde, nb_transac);
+                _comptes.Add(numcpt, compte);
+                //_retraits.Add(numcpt,new List<double>(){});
                 Comptes.Add(compte);
-
+                comptes_gests.Add(numcpt, num_gest);
 
                 return true;
             }
@@ -67,7 +68,8 @@ namespace Projet_Partie2
             if (Numcptok_exist(numcpt))
             {
                 _comptes.Remove(numcpt);
-                _retraits.Remove(numcpt);
+                comptes_gests.Remove(numcpt);
+                //_retraits.Remove(numcpt);
                 foreach(Compte_bancaire cpt in Comptes)
                 {
                     if (cpt.num_cpt == numcpt)
@@ -79,65 +81,7 @@ namespace Projet_Partie2
             }
             return false;
         }
-
-        private bool Sommeok(double somme, int numcpt)
-        {
-            if (numcpt != _environnement)
-            {
-                return somme > 0 && somme < _comptes[numcpt];
-            }
-            else
-                return somme > 0;
-            
-        }
-
-        private bool Tnumcptok(int numcpt)
-        {
-            return _comptes.ContainsKey(numcpt);
-
-        }
-
-        private bool Plafondok(int numcpt, double sommetrans)
-        {
-            // Je prends les 10 derniers transactions (ou les transactions si moins de 10)
-            List<double> dernretraits = _retraits[numcpt].Skip(Math.Max(0, _retraits[numcpt].Count - 10)).ToList();
-            double somme = dernretraits.Sum() + sommetrans;
-            return somme <= _plafond;
-        }
-
-        public bool Transaction(int numtrans, double somme, int numcpt1, int numcpt2)
-        {
-            // Dépôt
-            if (numcpt1 == _environnement && Tnumcptok(numcpt2) && Sommeok(somme, numcpt1))
-            {
-                _comptes[numcpt2] += somme;
-                return true;
-            }
-            // Retrait
-            else if ( Tnumcptok(numcpt1) && numcpt2 == _environnement )
-            {
-                if (Plafondok(numcpt1, somme) && Sommeok(somme, numcpt1))
-                {
-                    _comptes[numcpt1] -= somme;
-                    _retraits[numcpt1].Add(somme);
-                    return true;
-                }
-                else return false;
-            }
-            // Opération intercomptes
-            else if (Tnumcptok(numcpt1) && Tnumcptok(numcpt2))
-            {
-                if (Plafondok(numcpt1 , somme) &&  Sommeok(somme, numcpt1))
-                {
-                    _comptes[numcpt1] -= somme;
-                    _comptes[numcpt2] += somme;
-                    _retraits[numcpt1].Add(somme);
-                    return true;
-                }
-                else return false;
-            }
-            return false;
-        }
+               
     }
 
 }

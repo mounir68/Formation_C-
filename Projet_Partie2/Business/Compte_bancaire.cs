@@ -13,97 +13,77 @@ namespace Projet_Partie2
         protected readonly DateTime date_cloture;
         protected readonly DateTime date_cession;
         protected readonly DateTime date_réception;
-        protected double solde_initial;
-        protected const int _environnement = 0;
+        public double solde;
         protected const int _plafond = 1000;
-        protected static Dictionary<int, List<double>> _retraits;
-        protected static Dictionary<int, double> _comptes;
+        private int nb_transac;
+        private List<double> _retraits;
+        private List<KeyValuePair<DateTime, double>> _dates_retraits;
+        
 
-        public Compte_bancaire(int num_cpt, double solde_initial)
+        public Compte_bancaire(int num_cpt, double solde_initial, int nb_transac)
         {
             this.num_cpt = num_cpt;
-            this.solde_initial = solde_initial;
+            solde = solde_initial;
+            this.nb_transac = nb_transac;
         }
 
-        protected bool Numcptok(int numcpt)
+        
+       
+        private bool Somme_depot_ok(double somme)
         {
-            return numcpt > 0 && !_comptes.ContainsKey(numcpt);
+            return somme > 0;                 
+
         }
-        protected bool Soldeok(double solde)
+
+        private bool Somme_debit_ok(double somme)
         {
-            return solde >= 0;
-        }
+            return somme > 0 && somme < solde;
 
-        public bool AjouterCompte(int numcpt, double solde = 0)
-        {
-            if (Numcptok(numcpt) && Soldeok(solde))
-            {
-                gest.Add(numcpt, solde);
-                _retraits.Add(numcpt, new List<double>() { });
+        } 
 
-                return true;
-            }
-            return false;
-        }
-
-        private bool Sommeok(double somme, int numcpt)
-        {
-            if (numcpt != _environnement)
-            {
-                return somme > 0 && somme < gest[numcpt];
-            }
-            else
-                return somme > 0;
-
-        }
-
-        private bool Tnumgestok(int numcpt)
-        {
-            return gest.ContainsKey(numcpt);
-
-        }
-
-        private bool Plafondok(int numcpt, double sommetrans)
+            
+        private bool Plafondok(double sommetrans)
         {
             // Je prends les 10 derniers transactions (ou les transactions si moins de 10)
-            List<double> dernretraits = _retraits[numcpt].Skip(Math.Max(0, _retraits[numcpt].Count - 10)).ToList();
+            List<double> dernretraits = _retraits.Skip(Math.Max(0, _retraits.Count - nb_transac)).ToList();
             double somme = dernretraits.Sum() + sommetrans;
             return somme <= _plafond;
         }
 
-        public bool Transaction(int numtrans, double somme, int numcpt1, int numcpt2)
+        private bool Plafond_dates_ok(double somme, DateTime date)
+        {
+            double retraits_semaine =
+            _dates_retraits.Where(x => x.Key >= date.AddDays(-7)).Sum(x => x.Value);
+            retraits_semaine += somme;
+            return retraits_semaine <= _plafond;
+        }
+
+        public bool Depot(double somme)
         {
             // Dépôt
-            if (numcpt1 == _environnement && Tnumgestok(numcpt2) && Sommeok(somme, numcpt1))
+            if (Somme_depot_ok(somme))
             {
-                gest[numcpt2] += somme;
+                solde += somme;
                 return true;
-            }
-            // Retrait
-            else if (Tnumgestok(numcpt1) && numcpt2 == _environnement)
-            {
-                if (Plafondok(numcpt1, somme) && Sommeok(somme, numcpt1))
-                {
-                    gest[numcpt1] -= somme;
-                    _retraits[numcpt1].Add(somme);
-                    return true;
-                }
-                else return false;
-            }
-            // Opération intercomptes
-            else if (Tnumgestok(numcpt1) && Tnumgestok(numcpt2))
-            {
-                if (Plafondok(numcpt1, somme) && Sommeok(somme, numcpt1))
-                {
-                    gest[numcpt1] -= somme;
-                    gest[numcpt2] += somme;
-                    _retraits[numcpt1].Add(somme);
-                    return true;
-                }
-                else return false;
             }
             return false;
         }
+
+        public bool Retrait(double somme, DateTime date)
+        {
+                        
+            if (Plafondok(somme) && Plafond_dates_ok(somme, date) && Somme_debit_ok(somme))
+            {
+                solde -= somme;
+                _retraits.Add(somme);
+                KeyValuePair<DateTime, double> transac = new KeyValuePair<DateTime, double>(date, somme);
+                _dates_retraits.Add(transac);
+                return true;
+            }
+            else return false;
+            
+        }
+        
     }
 }
-}
+

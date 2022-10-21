@@ -7,21 +7,7 @@ using System.Threading.Tasks;
 
 namespace Projet_Partie2
 {
-    struct Transaction
-    {
-        public int numtrans;
-        public double montant;
-        public int numcpt1;
-        public int numcpt2;
-
-        public Transaction(int a, double b, int c, int d)
-        {
-            numtrans = a;
-            montant = b;
-            numcpt1 = c;
-            numcpt2 = d;
-        }
-    }
+    
 
     class Program
     {
@@ -30,17 +16,16 @@ namespace Projet_Partie2
 
             string path = Directory.GetCurrentDirectory();
             Console.WriteLine(path);
-            string fcomptes = path + @"\comptes.csv";
+            string fgests = path + @"\gestionnaires.csv";
+            string fopérations = path + @"\opérations.csv";
             string ftransactions = path + @"\transactions.csv";
-            string statut = path + @"\statut.csv";
-            gestion_comtpes gestion = new gestion_comtpes();
+            string transac_statut = path + @"\transac_statut.csv";
+            string opé_statut = path + @"\opé_statut.csv";
 
-            Dictionary<int, double> comptes = EntreesSorties.LectureComptes(fcomptes);
-            foreach (int item in comptes.Keys)
-            {
-                gestion.AjouterCompte(item, comptes[item]);
-            }
-            EntreesSorties.Ecrituresortie(statut, ftransactions, gestion);
+            EntreesSorties.LectureGests(fgests);
+            EntreesSorties.Gestion_entree_sortie(ftransactions, fopérations, transac_statut, opé_statut);
+            
+           
         }
     }
 }
