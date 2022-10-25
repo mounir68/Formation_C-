@@ -13,7 +13,7 @@ namespace Projet_Partie2
         
 
         public  Dictionary<int, Compte_bancaire> _comptes = new Dictionary<int, Compte_bancaire>();
-        public  List<Compte_bancaire> Comptes = new List<Compte_bancaire>();
+        public  List<Compte_bancaire> Comptes = new List<Compte_bancaire>() { };
         public static Dictionary<int, int> comptes_gests = new Dictionary<int, int>();
         //public Dictionary<int,List<double>> _retraits;
 
@@ -67,16 +67,12 @@ namespace Projet_Partie2
         {
             if (Numcptok_exist(numcpt))
             {
+                 
                 _comptes.Remove(numcpt);
                 comptes_gests.Remove(numcpt);
                 //_retraits.Remove(numcpt);
-                foreach(Compte_bancaire cpt in Comptes)
-                {
-                    if (cpt.num_cpt == numcpt)
-                    {
-                        Comptes.Remove(cpt);
-                    }
-                }
+                int i = Comptes.FindIndex(a => a.num_cpt == numcpt);
+                Comptes.RemoveAt(i);
                 return true;
             }
             return false;

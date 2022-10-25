@@ -23,7 +23,28 @@ namespace Projet_Partie2
             string opé_statut = path + @"\opé_statut.csv";
 
             EntreesSorties.LectureGests(fgests);
-            EntreesSorties.Gestion_entree_sortie(ftransactions, fopérations, transac_statut, opé_statut);
+            FileStream t = EntreesSorties.Créa_stream(ftransactions);
+            FileStream o = EntreesSorties.Créa_stream(fopérations);
+            FileStream st = EntreesSorties.Créa_stream_w(transac_statut);
+            FileStream so = EntreesSorties.Créa_stream_w(opé_statut);
+            StreamWriter wt = EntreesSorties.créa_writer(st);
+            StreamWriter wo = EntreesSorties.créa_writer(so);
+            StreamReader str_t = EntreesSorties.créa_reader(t);
+            StreamReader str_o = EntreesSorties.créa_reader(o);
+
+            EntreesSorties.Gestion_entree_sortie(str_t, str_o,wt, wo, transac_statut, opé_statut);
+            str_t.Dispose();
+            str_o.Dispose();
+            wo.Dispose();
+            wt.Dispose();
+            t.Close();
+            o.Close();
+            st.Close();
+            so.Close();
+
+
+           
+
             
            
         }

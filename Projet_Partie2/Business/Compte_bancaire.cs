@@ -16,8 +16,8 @@ namespace Projet_Partie2
         public double solde;
         protected const int _plafond = 1000;
         private int nb_transac;
-        private List<double> _retraits;
-        private List<KeyValuePair<DateTime, double>> _dates_retraits;
+        private List<double> _retraits = new List<double>();
+        private List<KeyValuePair<DateTime, double>> _dates_retraits = new List<KeyValuePair<DateTime, double>>();
         
 
         public Compte_bancaire(int num_cpt, double solde_initial, int nb_transac)

@@ -14,7 +14,29 @@ namespace Projet_Partie2
         private static int nb_echec;
         private static double tot_reussite;
         private static Dictionary<int, double> frais_gestions;
-        
+
+
+        public static FileStream Créa_stream(string fichier)
+        {
+            return new FileStream(fichier, FileMode.Open, FileAccess.Read) ;
+        }
+
+        public static FileStream Créa_stream_w(string fichier)
+        {
+            return new FileStream(fichier, FileMode.Create, FileAccess.Write);
+        }
+
+        public static StreamReader créa_reader(FileStream fileStream)
+        {
+            return new StreamReader(fileStream);
+        }
+
+        public static StreamWriter créa_writer(FileStream fileStream)
+        {
+            return new StreamWriter(fileStream);
+        }
+
+
         public static void LectureGests(string input)
         {
             using (FileStream g = new FileStream(input, FileMode.Open, FileAccess.Read))
@@ -34,121 +56,99 @@ namespace Projet_Partie2
             }
             
         }
-        public static Transaction LectureTransactions(string input)
-        {
-            
-            
-            using (FileStream t = new FileStream(input, FileMode.Open, FileAccess.Read))
+        public static Transaction LectureTransactions(StreamReader str)
+        {                                                        
+            if (!str.EndOfStream)
             {
-                using (StreamReader str = new StreamReader(t))
-                {
-                    if (!str.EndOfStream)
-                    {
-                        string ligne = str.ReadLine();
-                        string[] sp = ligne.Split(';');
-                        DateTime date = DateTime.ParseExact(sp[1],"d", CultureInfo.InvariantCulture);
-                        double montant = double.Parse(sp[2]);
-                        int numtrans = int.Parse(sp[0]);
-                        int numcpt1 = int.Parse(sp[3]);
-                        int numcpt2 = int.Parse(sp[4]);
-                        Transaction transaction = new Transaction(numtrans ,date, montant, numcpt1, numcpt2);
+                string ligne = str.ReadLine();
+                string[] sp = ligne.Split(';');
+                DateTime date = DateTime.ParseExact(sp[1],"d", CultureInfo.CurrentCulture);
+                double montant = double.Parse(sp[2]);
+                int numtrans = int.Parse(sp[0]);
+                int numcpt1 = int.Parse(sp[3]);
+                int numcpt2 = int.Parse(sp[4]);
+                Transaction transaction = new Transaction(numtrans ,date, montant, numcpt1, numcpt2);
                        
                        
-                        return transaction;
-                    }
-                    Transaction transaction1 = new Transaction(0, DateTime.Parse("11/11/2222") , 0, 0, 0);
-                    return transaction1;
-                }
+                return transaction;
             }
-            
+            Transaction transaction1 = new Transaction(0, DateTime.Now.AddDays(1), 0, 0, 0);
+            return transaction1;
+                                      
         }
 
-        public static Opération LectureOpération(string input)
+        public static Opération LectureOpération(StreamReader str)
         {
 
             
-            using (FileStream o = new FileStream(input, FileMode.Open, FileAccess.Read))
+            
+            if (!str.EndOfStream)
             {
-                using (StreamReader str = new StreamReader(o))
+                string ligne = str.ReadLine();
+                string[] sp = ligne.Split(';');
+                DateTime date = DateTime.ParseExact(sp[1], "d", CultureInfo.CurrentCulture);
+                double montant = 0;
+                if (sp[2] != "")
                 {
-                    if (!str.EndOfStream)
-                    {
-                        string ligne = str.ReadLine();
-                        string[] sp = ligne.Split(';');
-                        DateTime date = DateTime.ParseExact(sp[1], "d", CultureInfo.CurrentCulture);
-                        double montant = 0;
-                        if (sp[2] != "")
-                        {
-                            montant = double.Parse(sp[2]);
-                        }                                                
-                        int numcpt = int.Parse(sp[0]);
-                        int numgest1 = 0;
-                        int numgest2 = 0;
-                        if (sp[3] != "")
-                        {
-                            numgest1 = int.Parse(sp[3]);
-                        }
-                        if (sp[4] != "")
-                        {
-                            numgest2 = int.Parse(sp[4]);
-                        }
-                        Opération opération = new  Opération(date, numgest1, numgest2, montant, numcpt);
+                    montant = double.Parse(sp[2]);
+                }                                                
+                int numcpt = int.Parse(sp[0]);
+                int numgest1 = 0;
+                int numgest2 = 0;
+                if (sp[3] != "")
+                {
+                    numgest1 = int.Parse(sp[3]);
+                }
+                if (sp[4] != "")
+                {
+                    numgest2 = int.Parse(sp[4]);
+                }
+                Opération opération = new  Opération(date, numgest1, numgest2, montant, numcpt);
                         
-                        return opération;
-                    }
-                    Opération opération1 = new Opération(DateTime.Parse("11/11/2222"),0, 0, 0, 0);
-                    return opération1;
-                }
+                return opération;
             }
+            Opération opération1 = new Opération(DateTime.Now.AddDays(1),0, 0, 0, 0);
+            return opération1;
+                
 
         }
 
-        public static void Ecrituretransac(string statut_transac, Transaction transaction)
+        public static void Ecrituretransac(StreamWriter w, string statut_transac, Transaction transaction)
         {
-            using (FileStream et = new FileStream(statut_transac, FileMode.Create, FileAccess.Write))
-            {
-                using (StreamWriter writer = new StreamWriter(et))
-                {                                                            
-                    string res = transaction.statut ? "OK" : "KO";
-                    writer.WriteLine($"{transaction.Num_trans};{transaction.Date_trans};{transaction.Montant_trans};" +
-                        $"{transaction.Expéditeur};{transaction.Destinataire};{res}");
-                    
-                }
-            }
+            string res = transaction.statut ? "OK" : "KO";
+             w.WriteLine($"{transaction.Num_trans};{transaction.Date_trans};{transaction.Montant_trans};" +
+             $"{transaction.Expéditeur};{transaction.Destinataire};{res}");                  
+                
         }
 
-        public static void Ecritureopé(string statut_opé, Opération opération)
+        public static void Ecritureopé(StreamWriter w, string statut_opé, Opération opération)
         {
-            using (FileStream et = new FileStream(statut_opé, FileMode.Create, FileAccess.Write))
-            {
-                using (StreamWriter writer = new StreamWriter(et))
-                {
+            
                     string res = opération.statut ? "OK" : "KO";
-                    writer.WriteLine($"{opération.numcpt};{opération.Date_opé};{opération.solde_initial};" +
+                    w.WriteLine($"{opération.numcpt};{opération.Date_opé};{opération.solde_initial};" +
                         $"{opération.Entrée};{opération.Sortie};{res}");
 
-                }
-            }
+                
         }
 
-        public static void Gestion_entree_sortie(string entrée_transac, string entrée_opé, string sortie_transac, string sortie_opé)
+        public static void Gestion_entree_sortie(StreamReader t, StreamReader o, StreamWriter wt, StreamWriter wo, string sortie_transac, string sortie_opé)
         {
-            Transaction transaction = LectureTransactions(entrée_transac);
-            Opération opération = LectureOpération(entrée_opé);
-            DateTime date_verif = new DateTime(11 / 11 / 2222);
-            while (transaction.Num_trans != 0 && opération.Date_opé != date_verif)
+            Transaction transaction = LectureTransactions(t);
+            Opération opération = LectureOpération(o);
+            DateTime date_verif = DateTime.Now.AddDays(1);
+            while (transaction.Num_trans > 0|| opération.Date_opé < date_verif)
             {
                 if (transaction.Date_trans < opération.Date_opé)
                 {
                     transaction.Traitement_Transaction();
-                    Ecrituretransac(sortie_transac, transaction);
-                    transaction = LectureTransactions(entrée_transac);                                        
+                    Ecrituretransac(wt, sortie_transac, transaction);
+                    transaction = LectureTransactions(t);                                        
                 }
                 else if (transaction.Date_trans > opération.Date_opé || transaction.Date_trans == opération.Date_opé)
                 {
                     opération.Traitement_Opé();
-                    Ecritureopé(sortie_opé, opération);
-                    opération = LectureOpération(entrée_opé);
+                    Ecritureopé(wo, sortie_opé, opération);
+                    opération = LectureOpération(o);
                 }
 
             }

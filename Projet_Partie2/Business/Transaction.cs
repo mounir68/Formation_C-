@@ -47,10 +47,10 @@ namespace Projet_Partie2
             // Retrait
             else if (Expéditeur != 0 && Destinataire == 0 && comptes_gest.ContainsKey(Expéditeur))
             {
-                Gestionnaire gestionnaire = gests[comptes_gest[Destinataire]];
-                Compte_bancaire compte = gestionnaire._comptes[Destinataire];
-                compte.Retrait(Montant_trans, Date_trans);
-                statut = true;
+                Gestionnaire gestionnaire = gests[comptes_gest[Expéditeur]];
+                Compte_bancaire compte = gestionnaire._comptes[Expéditeur];
+                statut = compte.Retrait(Montant_trans, Date_trans);
+                
 
                 return statut;
 
@@ -71,8 +71,8 @@ namespace Projet_Partie2
                 {
                     Montant_trans += 10;
                 }
-                compte_exp.Retrait(Montant_trans, Date_trans);
-                statut = true;
+                statut = compte_exp.Retrait(Montant_trans, Date_trans) && compte_dest.Depot(Montant_trans);
+                
 
                 return statut;
             }
